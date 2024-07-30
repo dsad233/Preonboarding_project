@@ -1,9 +1,9 @@
 import express from "express";
-import { prisma } from "../../prisma/prismaFilter.js";
-import { UsersRepository } from "./users.repository.js";
-import { UsersService } from "./users.service.js";
-import { UsersController } from "./users.controller.js";
-import { authMiddleware } from "../middlewares/auth.middlewares.js";
+import { prisma } from "../../../prisma/prismaFilter.js";
+import { UsersRepository } from "../users.repository.js";
+import { UsersService } from "../users.service.js";
+import { UsersController } from "../users.controller.js";
+import { authMiddleware } from "../../middlewares/auth.middlewares.js";
 
 const router = express.Router();
 

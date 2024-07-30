@@ -1,5 +1,5 @@
-import { AuthController } from "./auth.controller.js";
-import { beforeEach, describe, expect, jest } from '@jest/globals';
+import { AuthController } from "../auth.controller.js";
+import { beforeEach, describe, expect, jest, test } from '@jest/globals';
 
 
 const mockAuthService = {
@@ -66,6 +66,19 @@ describe('AuthController Test', () => {
 
         });
 
+        test('Post register Controller Test Error', async() => {
+            const errorMessage = "서버 에러가 발생했습니다.";
+
+            mockAuthService.register.mockRejectedValue(new Error(errorMessage));
+
+            await authController.register(mockRequest, mockResponse, mockNext);
+
+            expect(mockAuthService.register).toHaveBeenCalledTimes(1);
+            expect(mockResponse.status).toHaveBeenCalledTimes(1);
+            expect(mockResponse.status).toHaveBeenCalledWith(500);
+            expect(mockResponse.json).toHaveBeenCalledWith({ message : errorMessage });
+        });
+
         test('Post login Controller Test', async () => {
             const body = {
                 username : "user_name",
@@ -99,6 +112,19 @@ describe('AuthController Test', () => {
             expect(mockResponse.json).toHaveBeenCalledWith(result);
             expect(mockResponse.cookie).toHaveBeenCalledWith("authorization", `Bearer ${token.userJwt}`);
             expect(mockResponse.cookie).toHaveBeenCalledWith("refreshToken", token.refreshToken);
+        });
+
+        test('Post login Controller Test Error', async () => {
+            const errorMessage = "서버 에러가 발생했습니다.";
+            
+            mockAuthService.login.mockRejectedValue(new Error(errorMessage));
+
+            await authController.login(mockRequest, mockResponse, mockNext);
+
+            expect(mockAuthService.login).toHaveBeenCalledTimes(1);
+            expect(mockResponse.status).toHaveBeenCalledTimes(1);
+            expect(mockResponse.status).toHaveBeenCalledWith(500);
+            expect(mockResponse.json).toHaveBeenCalledWith({ message : errorMessage });
         });
     });
 });
