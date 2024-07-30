@@ -1,220 +1,134 @@
-import { AuthService } from "../auth/auth.service.js";
-import { beforeEach, describe, expect, jest, test } from "@jest/globals";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+export class AuthController {
+    constructor(authService) {
+        this.authService = authService;
+    }
 
-const mockAuthRepository = {
-    register: jest.fn(),
-    findUsername: jest.fn(),
-    findNickname: jest.fn()
-  };
-
-  
-const mockHashPassword = jest.fn();
-  
-
-const authService = new AuthService(mockAuthRepository, mockHashPassword);
-
-describe('AuthService Test', () => {
-    beforeEach(() => {
-        jest.resetAllMocks();
-    });
-
-    test('hash_Password Test', async () => {
-        const body = {
-            password : "password"
-        };
-        const saltRounds = Number(process.env.HASH_ROUND);
-        const hashedPassword = 'hashed_password';
-
-        bcrypt.hash.mockResolvedValue(hashedPassword);
-
-        const hashResult = await hashedPassword(body.password);
-        expect(bcrypt.hash).toHaveBeenCalledTimes(1);
-        expect(bcrypt.hash).toHaveBeenCalledWith(body.password, saltRounds);
-        expect(hashResult).toBe(hashedPassword);
-    });
-
-    test('register Service Test', async () => {
-        const findUser = {
-            userId : 1,
-            username : "user_name",
-            password : "hashed_password",
-            nickname : "nick_name",
-            createdAt : new Date('06 October 2011 15:50 UTC'),
-            updatedAt : new Date('06 October 2011 15:50 UTC')
-        };
-        const body = {
-            username : "user_name",
-            password : "hashed_password",
-            nickname : "nick_name"
-        };
-        const hash_Password = await authService.hashpassword(body.password);
-        mockAuthRepository.findUsername.mockReturnValue(null);
-        mockAuthRepository.findNickname.mockReturnValue(null);
-        mockAuthRepository.register.mockReturnValue(findUser);
-        mockHashPassword.mockReturnValue(hash_Password);
-
-        const userCreate = await authService.register(body.username, body.password, body.nickname);
-
-        expect(mockAuthRepository.findUsername).toHaveBeenCalledTimes(1);
-        expect(mockAuthRepository.findUsername).toHaveBeenCalledWith(body.username);
-
-        expect(mockAuthRepository.findNickname).toHaveBeenCalledTimes(1);
-        expect(mockAuthRepository.findNickname).toHaveBeenCalledWith(body.nickname);
-
-        expect(mockAuthRepository.register).toHaveBeenCalledTimes(1);
-        expect(mockAuthRepository.register).toHaveBeenCalledWith(body.username, hash_Password, body.nickname);
-
-        expect(userCreate).toEqual(findUser);
-    });
-
-    test('register Service findUsername already Error', async () => {
-        const findUser = {
-            userId : 1,
-            username : "user_name",
-            password : "hashed_password",
-            nickname : "nick_name",
-            createdAt : new Date('06 October 2011 15:50 UTC'),
-            updatedAt : new Date('06 October 2011 15:50 UTC')
-        };
-        const body = {
-            username : "user_name",
-            password : "hashed_password",
-            nickname : "nick_name"
-        };
-        const hash_Password = 'hashed_password';
-
-        mockAuthRepository.findUsername.mockReturnValue(findUser);
-        mockAuthRepository.findNickname.mockReturnValue(null);
-        mockHashPassword.mockReturnValue(hash_Password);
-
+    /**
+     * @swagger
+     * /register:
+     *   post:
+     *     tags:
+     *       - Auth
+     *     description: 회원가입
+     *     produces:
+     *       - application/json
+     *     parameters:
+     *       - in: body
+     *         name: body
+     *         description: 회원가입 정보
+     *         required: true
+     *         schema:
+     *           type: object
+     *           required:
+     *             - username
+     *             - password
+     *             - nickname
+     *             - passwordConfirm
+     *           properties:
+     *             username:
+     *               type: string
+     *               description: 유저 아이디
+     *             password:
+     *               type: string
+     *               description: 패스워드
+     *             nickname:
+     *               type: string
+     *               description: 닉네임
+     *             passwordConfirm:
+     *               type: string
+     *               description: 패스워드 확인
+     *     responses:
+     *       201:
+     *         description: 성공적으로 회원가입이 완료되었습니다.
+     *       400:
+     *         description: 잘못된 요청
+     *       500:
+     *         description: 서버 에러가 발생했습니다.
+     */
+    register = async (req, res, next) => {
         try {
-            await authService.register(body.username, body.password, body.nickname);
+            const { username, password, nickname, passwordConfirm } = req.body;
+
+            if (!username) {
+                return res.status(400).json({ message: "유저 아이디를 입력해주세요." });
+            }
+
+            if (!password) {
+                return res.status(400).json({ message: "패스워드란을 입력해주세요." });
+            }
+
+            if (password !== passwordConfirm) {
+                return res.status(400).json({ message: "패스워드 확인란과 일치하지 않습니다. 다시 입력해주세요." });
+            }
+
+            if (!nickname) {
+                return res.status(400).json({ message: "닉네임을 입력해주세요." });
+            }
+
+            await this.authService.register(username, password, nickname);
+
+            return res.status(201).json({ message: "성공적으로 회원가입이 완료되었습니다." });
         } catch (error) {
-            expect(error.message).toBe("이미 존재하는 유저입니다.");
+            console.log(error.message);
+            return res.status(500).json({ message: "서버 에러가 발생했습니다." });
         }
-    });
-    
-    test('register Service findNickname already Error', async () => {
-        const findUser = {
-            userId : 1,
-            username : "user_name",
-            password : "hashed_password",
-            nickname : "nick_name",
-            createdAt : new Date('06 October 2011 15:50 UTC'),
-            updatedAt : new Date('06 October 2011 15:50 UTC')
-        };
-        const body = {
-            username : "user_name",
-            password : "hashed_password",
-            nickname : "nick_name"
-        };
-        const hash_Password = 'hashed_password';
+    }
 
-        mockAuthRepository.findUsername.mockReturnValue(null);
-        mockAuthRepository.findNickname.mockReturnValue(findUser);
-        mockHashPassword.mockReturnValue(hash_Password);
-
+    /**
+     * @swagger
+     * /login:
+     *   post:
+     *     tags:
+     *       - Auth
+     *     description: 로그인
+     *     produces:
+     *       - application/json
+     *     parameters:
+     *       - in: body
+     *         name: body
+     *         description: 로그인 정보
+     *         required: true
+     *         schema:
+     *           type: object
+     *           required:
+     *             - username
+     *             - password
+     *           properties:
+     *             username:
+     *               type: string
+     *               description: 유저 아이디
+     *             password:
+     *               type: string
+     *               description: 패스워드
+     *     responses:
+     *       200:
+     *         description: 로그인 완료
+     *       400:
+     *         description: 잘못된 요청
+     *       500:
+     *         description: 서버 에러가 발생했습니다.
+     */
+    login = async (req, res, next) => {
         try {
-            await authService.register(body.username, body.password, body.nickname);
+            const { username, password } = req.body;
+
+            if (!username) {
+                return res.status(400).json({ message: "유저 아이디를 입력해주세요." });
+            }
+
+            if (!password) {
+                return res.status(400).json({ message: "패스워드란을 입력해주세요." });
+            }
+
+            const token = await this.authService.login(username, password);
+            
+            res.cookie("authorization", `Bearer ${token.userJwt}`);
+            res.cookie("refreshToken", token.refreshToken);
+
+            return res.status(200).json({ message: "로그인 완료.", token });
         } catch (error) {
-            expect(error.message).toBe("이미 존재하는 닉네임 입니다.");
+            console.log(error.message);
+            return res.status(500).json({ message: "서버 에러가 발생했습니다." });
         }
-    });
-
-    test('Login Service Test', async () => {
-        const findUser = {
-            userId : 1,
-            username : "user_name",
-            password : "hashed_password",
-            nickname : "nick_name",
-            createdAt : new Date('06 October 2011 15:50 UTC'),
-            updatedAt : new Date('06 October 2011 15:50 UTC')
-        };
-        const body = {
-            username : "user_name",
-            password : "password"
-        };
-
-        const userJwt = 'user_jwt_token';
-        const refreshToken = 'refresh_token';
-        bcrypt.compare.mockResolvedValue(true);
-        mockAuthRepository.findUsername.mockReturnValue(findUser);
- 
-        const login = await authService.login(body.username, body.password);
-
-        expect(mockAuthRepository.findUsername).toHaveBeenCalledTimes(1);
-        expect(mockAuthRepository.findUsername).toHaveBeenCalledWith(body.username);
-
-
-        
-    });
-});
-
-//   describe('Auth Service Test', () => {
-
-//     beforeEach(() => {
-//         jest.resetAllMocks(); 
-//     });
-
-//     test('register Repository Test', async () => {
-//         const registerReturn = {
-//             userId : 1,
-//             nickname : "test",
-//             username : "user_test",
-//             password : "hashed_password",
-//             createdAt: new Date('07 October 2011 15:50 UTC'),
-//             updatedAt: new Date('07 October 2011 15:50 UTC'),
-//         };
-//         const hashPasswordReturn = 'hashed_password';
-        
-//         mockAuthRepository.findUsername.mockReturnValue(null); 
-//         mockAuthRepository.findNickname.mockReturnValue(null);
-//         mockHashPassword.mockReturnValue(hashPasswordReturn);
-//         mockAuthRepository.register.mockReturnValue(registerReturn);
-
-//         const createUserParams = {
-//             username: 'user_test',
-//             password: 'plain_password',
-//             nickname: 'test',
-//         };
-        
-//         const CreateUser = await authService.register(
-//             createUserParams.username,
-//             createUserParams.password,
-//             createUserParams.nickname
-//         );
-
-//         expect(CreateUser).toEqual(registerReturn);
-//         expect(mockAuthRepository.findUsername).toHaveBeenCalledWith(createUserParams.username);
-//         expect(mockAuthRepository.findNickname).toHaveBeenCalledWith(createUserParams.nickname);
-//         expect(mockHashPassword).toHaveBeenCalledWith(createUserParams.password); 
-//         expect(mockAuthRepository.register).toHaveBeenCalledTimes(1);
-//         expect(mockAuthRepository.register).toHaveBeenCalledWith(createUserParams.username, hashPasswordReturn, createUserParams.nickname);
-//     });
-
-//     test('username already exists', async () => {
-//         const alreadyUser = { username : "user_test" };
-//         const hashPasswordReturn = 'hashed_password';
-
-//         mockAuthRepository.findUsername(alreadyUser);
-//         mockAuthRepository.findNickname(null);
-//         mockHashPassword.mockReturnValue(hashPasswordReturn);
-        
-//         await expect(authService.register('user_test', 'plain_password', 'test')).rejects.toThrow('이미 존재하는 유저입니다.');
-//     });
-
-//     test('nickname aleady exists', async () => {
-//         const aleadyNickname = { nickname : "nickname" };
-//         const findUsernameReturn = null;
-//         const hashPasswordReturn = 'hashed_password';
-
-//         mockAuthRepository.findUsername.mockResolvedValue(findUsernameReturn);
-//         mockAuthRepository.findNickname.mockResolvedValue(aleadyNickname);
-//         mockHashPassword.mockReturnValue(hashPasswordReturn);
-
-//         await expect(authService.register('user_test', 'plain_password', 'test')).rejects.toThrow('이미 존재하는 닉네임 입니다.');
-//     });
-
-//   });
+    }
+}

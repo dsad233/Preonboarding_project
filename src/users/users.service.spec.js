@@ -34,8 +34,8 @@ describe('UsersService Test', () => {
             }
         ];
 
-        mockUserPrisma.perMisson.mockReturnValue(permission);
-        mockUserPrisma.findAllUser.mockReturnValue(findAll);
+        mockUserPrisma.perMisson.mockResolvedValue(permission);
+        mockUserPrisma.findAllUser.mockResolvedValue(findAll);
 
         const findAllUsers = await usersService.findAllUser(userId);
 
@@ -57,8 +57,8 @@ describe('UsersService Test', () => {
             updatedAt : new Date('07 October 2011 15:50 UTC')
         };
 
-        mockUserPrisma.findUserOne.mockReturnValue(findOne);
-        mockUserPrisma.perMisson.mockReturnValue(permission);
+        mockUserPrisma.findUserOne.mockResolvedValue(findOne);
+        mockUserPrisma.perMisson.mockResolvedValue(permission);
 
         const findOneUser = await usersService.findUserOne(userId, paramId);
 
@@ -96,7 +96,7 @@ describe('UsersService Test', () => {
             updatedAt : new Date('07 October 2011 15:50 UTC')
         };
 
-        mockUserPrisma.findUserOne.mockReturnValue(findOne);
+        mockUserPrisma.findUserOne.mockResolvedValue(findOne);
 
         try {
             await usersService.findUserOne(userId, paramId);
@@ -118,8 +118,8 @@ describe('UsersService Test', () => {
             updatedAt : new Date('07 October 2011 15:50 UTC')
         };
 
-        mockUserPrisma.findUserOne.mockReturnValue(findOne);
-        mockUserPrisma.perMisson.mockReturnValue(permission);
+        mockUserPrisma.findUserOne.mockResolvedValue(findOne);
+        mockUserPrisma.perMisson.mockResolvedValue(permission);
 
         try {
             await usersService.findUserOne(userId, paramId);

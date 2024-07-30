@@ -1,100 +1,104 @@
-// import { AuthController } from "./auth.controller.js";
-// import { jest } from '@jest/globals';
+import { AuthController } from "./auth.controller.js";
+import { beforeEach, describe, expect, jest } from '@jest/globals';
 
-// // Mock 서비스 설정
-// const mockAuthService = {
-//   register: jest.fn(),
-//   login: jest.fn()
-// };
 
-// // Mock 요청, 응답, 넥스트 객체 설정
-// const mockReq = {
-//   body: {}
-// };
+const mockAuthService = {
+  register: jest.fn(),
+  login: jest.fn()
+};
 
-// const mockRes = {
-//   status: jest.fn().mockReturnThis(),
-//   json: jest.fn(),
-//   cookie: jest.fn(),
-// };
+// 가상 request 설정
+const mockRequest = {
+    body : {}
+};
 
-// const mockNext = jest.fn();
+// 가상 response 설정
+const mockResponse = {
+  status: jest.fn().mockReturnThis(),
+  json: jest.fn(),
+  cookie: jest.fn(),
+};
 
-// // AuthController 인스턴스 생성
-// const authController = new AuthController(mockAuthService);
+// 가상 next 요청 설정
+const mockNext = jest.fn();
 
-// describe('AuthController', () => {
-//   describe('register', () => {
-//     test('username not input', async () => {
-//       mockReq.body = { password: 'password', passwordConfirm: 'passwordConfirm', nickname: 'nickname' };
+// AuthController 인스턴스 생성
+const authController = new AuthController(mockAuthService);
 
-//       await authController.register(mockReq, mockRes, mockNext);
-//       expect(mockRes.status).toHaveBeenCalledWith(400);
-//       expect(mockRes.json).toHaveBeenCalledWith({ message: "유저 아이디를 입력해주세요." });
-//     });
 
-//     test('password not input', async () => {
-//       mockReq.body = { username: 'username', passwordConfirm: 'passwordConfirm', nickname: 'nickname' };
+describe('AuthController Test', () => {
+    describe('register Controller Test', () => {
+        beforeEach(() => {
+            jest.resetAllMocks();
+            mockResponse.status.mockReturnValue(mockResponse);
+            mockResponse.json.mockReturnValue(mockResponse);
+        });
+        test('Post register Controller Test', async () => {
+            const body = {
+                username : "user_name",
+                password : "password",
+                passwordConfirm : "password",
+                nickname : "nick_name"
+            };
+            const findUser = {
+                userId : 1,
+                username : "user_name",
+                password : "password",
+                nickname : "nick_name",
+                createdAt : new Date('06 October 2011 15:50 UTC'),
+                updatedAt : new Date('06 October 2011 15:50 UTC')
+            };
 
-//       await authController.register(mockReq, mockRes, mockNext);
-//       expect(mockRes.status).toHaveBeenCalledWith(400);
-//       expect(mockRes.json).toHaveBeenCalledWith({ message: "패스워드란을 입력해주세요." });
-//     });
+            mockRequest.body = body;
 
-//     test('passwordConfirm not input', async () => {
-//       mockReq.body = { username: 'username', password: 'password', nickname: 'nickname' };
+            mockAuthService.register.mockReturnValue(findUser);
 
-//       await authController.register(mockReq, mockRes, mockNext);
-//       expect(mockRes.status).toHaveBeenCalledWith(400);
-//       expect(mockRes.json).toHaveBeenCalledWith({ message: "패스워드 확인란과 일치하지 않습니다. 다시 입력해주세요." });
-//     });
+            await authController.register(mockRequest, mockResponse, mockNext);
 
-//     test('nickname not input', async () => {
-//       mockReq.body = { username: 'username', password: 'password', passwordConfirm: 'passwordConfirm' };
+            expect(mockAuthService.register).toHaveBeenCalledTimes(1);
+            expect(mockAuthService.register).toHaveBeenCalledWith(
+                body.username,
+                body.password,
+                body.nickname
+            );
+            expect(mockResponse.status).toHaveBeenCalledWith(201);
+            expect(mockResponse.json).toHaveBeenCalledWith({ message: "성공적으로 회원가입이 완료되었습니다." });
 
-//       await authController.register(mockReq, mockRes, mockNext);
-//       expect(mockRes.status).toHaveBeenCalledWith(400);
-//       expect(mockRes.json).toHaveBeenCalledWith({ message: "닉네임을 입력해주세요." });
-//     });
+        });
 
-//     test('Create Done.', async () => {
-//       mockReq.body = { username: 'username', password: 'password', passwordConfirm: 'passwordConfirm', nickname: 'nickname' };
+        test('Post login Controller Test', async () => {
+            const body = {
+                username : "user_name",
+                password : "password"
+            };
 
-//       await authController.register(mockReq, mockRes, mockNext);
-//       expect(mockRes.status).toHaveBeenCalledWith(201);
-//       expect(mockRes.json).toHaveBeenCalledWith({ message: "성공적으로 회원가입이 완료되었습니다." });
-//     });
-//   });
+            const userJwt = 'userjwt_token';
+            const refreshToken = 'refresh_token';
 
-//   describe('login', () => {
-//     test('username not input', async () => {
-//       mockReq.body = { password: 'password' };
+            const token = {
+                userJwt,
+                refreshToken
+            };
 
-//       await authController.login(mockReq, mockRes, mockNext);
-//       expect(mockRes.status).toHaveBeenCalledWith(400);
-//       expect(mockRes.json).toHaveBeenCalledWith({ message: "유저 아이디를 입력해주세요." });
-//     });
+            const Done = "로그인 완료."
 
-//     test('password not input', async () => {
-//       mockReq.body = { username: 'username' };
+            const result = { message : Done, token };
 
-//       await authController.login(mockReq, mockRes, mockNext);
-//       expect(mockRes.status).toHaveBeenCalledWith(400);
-//       expect(mockRes.json).toHaveBeenCalledWith({ message: "패스워드란을 입력해주세요." });
-//     });
+            mockRequest.body = body;
 
-//     test('Login Done.', async () => {
-//       mockReq.body = { username: 'username', password: 'password' };
-//       const token = { userJwt: 'userJwt', refreshToken: 'refreshToken' };
+            mockAuthService.login.mockReturnValue(token);
 
-//       mockAuthService.login.mockResolvedValue(token);
+            await authController.login(mockRequest, mockResponse, mockNext);
 
-//       await authController.login(mockReq, mockRes, mockNext);
-//       expect(mockAuthService.login).toHaveBeenCalledWith('username', 'password');
-//       expect(mockRes.cookie).toHaveBeenCalledWith('authorization', `Bearer ${token.userJwt}`);
-//       expect(mockRes.cookie).toHaveBeenCalledWith('refreshToken', token.refreshToken);
-//       expect(mockRes.status).toHaveBeenCalledWith(200);
-//       expect(mockRes.json).toHaveBeenCalledWith({ message: "로그인 완료." });
-//     });
-//   });
-// });
+            expect(mockAuthService.login).toHaveBeenCalledTimes(1);
+            expect(mockAuthService.login).toHaveBeenCalledWith(
+                body.username,
+                body.password
+            );
+            expect(mockResponse.status).toHaveBeenCalledWith(200);
+            expect(mockResponse.json).toHaveBeenCalledWith(result);
+            expect(mockResponse.cookie).toHaveBeenCalledWith("authorization", `Bearer ${token.userJwt}`);
+            expect(mockResponse.cookie).toHaveBeenCalledWith("refreshToken", token.refreshToken);
+        });
+    });
+});

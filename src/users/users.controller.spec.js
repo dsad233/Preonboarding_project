@@ -7,7 +7,8 @@ const mockUserService = {
 };
 
 const mockRequest = {
-    body : jest.fn()
+    user: jest.fn(),
+    params: jest.fn()
 };
 
 const mockResponse = {
@@ -21,6 +22,7 @@ describe('UsersController Test', () => {
     beforeEach(() => {
         jest.resetAllMocks();
         mockResponse.status.mockReturnValue(mockResponse);
+        mockResponse.json.mockReturnValue(mockResponse);
     });
 
     test('Get findAllUser Controller', async () => {
@@ -41,7 +43,7 @@ describe('UsersController Test', () => {
 
         mockRequest.user = { userId : 1 };
 
-        mockUserService.findAllUser.mockReturnValue(Promise.resolve(AllUser));
+        mockUserService.findAllUser.mockReturnValue(AllUser);
 
         await usersController.findAllUser(mockRequest, mockResponse);
 
@@ -79,7 +81,7 @@ describe('UsersController Test', () => {
         mockRequest.user = { userId : 1 };
         mockRequest.params = { paramId : 1 };
 
-        mockUserService.findUserOne.mockReturnValue(Promise.resolve(findOne));
+        mockUserService.findUserOne.mockReturnValue(findOne);
 
         await usersController.findUserOne(mockRequest, mockResponse);
 
