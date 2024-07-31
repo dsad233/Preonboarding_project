@@ -40,10 +40,6 @@ deploy:
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
         with:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          HASH_ROUND : ${{ secrets.DATABASE_URL }}
-          JWT_SECRET : ${{ secrets.JWT_SECRET }}
-          JWT_SECRET_REFRESH : ${{ secrets.JWT_SECRET_REFRESH }}
           script: 
             # 프로젝트 디렉토리로 이동
             cd /home/ubuntu/project
@@ -51,11 +47,7 @@ deploy:
             # GitHub에서 최신 코드를 가져옴
             git pull
             
-            # .env 파일 생성
-            echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > .env
-            echo "HASH_ROUND=${{ secrets.HASH_ROUND }}" >> .env
-            echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
-            echo "JWT_SECRET_REFRESH=${{ secrets.JWT_SECRET_REFRESH }}" >> .env
+
 
 						# node 관련 환경 설정 가져오기 위해 실행
             source /home/ubuntu/.nvm/nvm.sh
