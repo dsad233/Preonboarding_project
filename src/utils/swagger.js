@@ -3,15 +3,28 @@ import swaggereJsdoc from "swagger-jsdoc";
 
 const options = {
     swaggerDefinition: {
+        openapi : "3.0.0",
         info: {
-            title: 'Test API',
+            title: 'Preonboarding API',
             version: '1.0.0',
-            description: 'Test API with express',
+            description: 'Preonboarding API with express',
         },
-        host: 'localhost:3300',
-        basePath: '/'
+        servers: [
+            {
+              url: 'http://localhost:3000',
+            },
+          ],
+        components : {
+          securitySchemes: {
+            bearerAuth: {
+              type: 'http',
+              scheme: 'bearer',
+              bearerFormat: 'JWT',
+            },
+          },
+        },
     },
-    apis: ['./routes/*.js', './src/utils/swagger/*js']
+    apis: ['**/*.js']
 };
 
 const specs = swaggereJsdoc(options);
