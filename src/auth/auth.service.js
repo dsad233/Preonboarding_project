@@ -1,5 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
 
 export class AuthService {
     constructor(authRepository){
@@ -46,12 +48,8 @@ export class AuthService {
             throw new Error("패스워드가 일치하지 않습니다.");
         }
 
-        console.log("testd");
         const userJwt = jwt.sign({ userId : findUsername.userId }, process.env.JWT_SECRET, { expiresIn : '12h' });
         const refreshToken = jwt.sign({ userId : findUsername.userId }, process.env.JWT_SECRET_REFRESH, { expiresIn : '5d' });
-
-        console.log("userJwt : ",userJwt);
-        console.log("refreshToken : ",refreshToken);
 
         return { userJwt, refreshToken };
     }
