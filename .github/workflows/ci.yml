@@ -44,7 +44,7 @@ deploy:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.PORT }}
-          script: |
+          script: 
             # 프로젝트 디렉토리로 이동
             cd /home/ubuntu/project
             
