@@ -49,6 +49,9 @@ export class AuthService {
         const userJwt = jwt.sign({ userId : findUsername.userId }, process.env.JWT_SECRET, { expiresIn : '12h' });
         const refreshToken = jwt.sign({ userId : findUsername.userId }, process.env.JWT_SECRET_REFRESH, { expiresIn : '5d' });
 
+        console.log("userJwt : ",userJwt);
+        console.log("refreshToken : ",refreshToken);
+
         return { userJwt, refreshToken };
     }
 }
