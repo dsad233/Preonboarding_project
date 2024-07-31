@@ -21,8 +21,6 @@ export class UsersService {
     
     // 유저 상세 조회
     findUserOne = async (userId, paramId) => {
-        console.log("paramId : ", paramId);
-        console.log("userId : ",userId);
         const userOne = await this.usersRepository.findUserOne(paramId);
         const permisson = await this.usersRepository.perMisson(userId);
 
