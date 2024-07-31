@@ -1,7 +1,9 @@
+import { Prisma } from "@prisma/client";
 import { AuthRepository } from "../auth.repository";
 import { beforeEach, describe, expect, jest, test } from "@jest/globals";
 
 const mockPrisma = {
+    $transaction: jest.fn(),
     users : {
         create : jest.fn(),
         findFirst : jest.fn(),
@@ -34,11 +36,20 @@ describe('AuthRepository Test', () => {
                 password : "hashed_password", 
                 nickname : "nickname" 
             };
+
+            mockPrisma.$transaction.mockImplementation(async (tx) => {
+                return tx(mockPrisma);
+            });
     
-            mockPrisma.users.create.mockReturnValue(userCreateReturn);
-            mockPrisma.authorities.create.mockReturnValue(authoritieCreateReturn);
+            mockPrisma.users.create.mockResolvedValue(userCreateReturn);
+            mockPrisma.authorities.create.mockResolvedValue(authoritieCreateReturn);
     
             const userCreate = await authRepository.register(body.username, body.password, body.nickname);
+
+            expect(mockPrisma.$transaction).toHaveBeenCalledTimes(1);
+            expect(mockPrisma.$transaction).toHaveBeenCalledWith(expect.any(Function), {
+                isolationLevel: Prisma.TransactionIsolationLevel.ReadCommitted
+            });
     
             expect(mockPrisma.users.create).toHaveBeenCalledTimes(1);
             expect(mockPrisma.users.create).toHaveBeenCalledWith({
@@ -56,7 +67,7 @@ describe('AuthRepository Test', () => {
                     authorityName: "USER"
                 }
             });
-            expect(userCreate).toEqual(userCreateReturn);
+            expect(userCreate).toEqual({ userCreate : userCreateReturn, authoritiesCreate : authoritieCreateReturn });
         });
     });
     
