@@ -106,14 +106,14 @@ export class UsersController {
 
     /**
    * @swagger
-   * /users/{id}:
+   * /users/{paramId}:
    *   get:
    *     tags:
    *       - Users
    *     summary: 유저 상세 조회
    *     description: 이 기능은 유저와 어드민이 접근 가능합니다.
    *     parameters:
-   *       - name: userId
+   *       - name: paramId
    *         in: path
    *         description: User ID paramId
    *         required: true
