@@ -14,7 +14,7 @@ const mockRequest = {
 
 // 가상 response 설정
 const mockResponse = {
-  status: jest.fn().mockReturnThis(),
+  status: jest.fn(),
   json: jest.fn(),
   cookie: jest.fn(),
 };
