@@ -1,8 +1,8 @@
 import express from "express";
-import { prisma } from "../../prisma/prismaFilter.js";
-import { AuthRepository } from "../auth/auth.repository.js";
-import { AuthService } from "../auth/auth.service.js";
-import { AuthController } from "../auth/auth.controller.js";
+import { prisma } from "../../../prisma/prismaFilter.js";
+import { AuthRepository } from "../auth.repository.js";
+import { AuthService } from "../auth.service.js";
+import { AuthController } from "../auth.controller.js";
 const router = express.Router();
 
 const authRepository = new AuthRepository(prisma);
