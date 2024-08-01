@@ -9,9 +9,7 @@ export default [
       globals: {
         ...globals.node,
         ...globals.es2021,
-        ...globals.jest,
-        ...globals.browser,
-        myCustomGlobal: "readonly"
+        ...globals.jest
       },
       ecmaVersion: 'latest',
       sourceType: 'module',
