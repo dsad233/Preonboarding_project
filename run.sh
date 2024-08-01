@@ -6,7 +6,6 @@ npm install
 pm2 delete Preonboarding_project || true
 
 
-
 # 앱을 PM2로 다시 등록 및 시작
 pm2 start npm --name "Preonboarding_project" -- run start
 
