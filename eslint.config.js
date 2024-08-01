@@ -1,19 +1,13 @@
 import globals from "globals";
 import js from '@eslint/js';
 
-const customGlobals = {
-  TomSelect: "readable",
-}
-
 export default [
   {
     files: ['**/*.js', '**/*.jsx'],
     languageOptions: {
       globals: {
-        ...customGlobals,
         ...globals.browser,
         ...globals.node,
-        ...globals.es2021,
         ...globals.jest
       },
       ecmaVersion: 'latest',
