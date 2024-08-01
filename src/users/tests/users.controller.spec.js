@@ -1,5 +1,5 @@
 import { UsersController } from "../users.controller.js";
-import { beforeEach, describe, expect, jest } from "@jest/globals";
+import { beforeEach, describe, expect, jest, test } from "@jest/globals";
 
 const mockUserService = {
     findAllUser : jest.fn(),

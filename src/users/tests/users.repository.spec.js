@@ -1,5 +1,5 @@
 import { UsersRepository } from "../users.repository";
-import { beforeEach, describe, jest } from "@jest/globals";
+import { beforeEach, describe, jest, test, expect } from "@jest/globals";
 
 
 const mockUserPrisma = {
@@ -10,7 +10,7 @@ const mockUserPrisma = {
     authorities : {
         findFirst : jest.fn()
     }
-}
+};
 
 
 const usersRepository = new UsersRepository(mockUserPrisma);

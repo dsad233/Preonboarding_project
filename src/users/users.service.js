@@ -17,7 +17,7 @@ export class UsersService {
         }
 
         return findAllUser;
-    }
+    };
     
     // 유저 상세 조회
     findUserOne = async (userId, paramId) => {
@@ -37,5 +37,5 @@ export class UsersService {
         } else {
             throw new Error("접근 권한이 없습니다.");
         }
-    }
+    };
 }

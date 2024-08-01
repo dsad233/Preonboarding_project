@@ -19,9 +19,6 @@ const mockResponse = {
   cookie: jest.fn(),
 };
 
-// 가상 next 요청 설정
-const mockNext = jest.fn();
-
 // AuthController 인스턴스 생성
 const authController = new AuthController(mockAuthService);
 
@@ -53,7 +50,7 @@ describe('AuthController Test', () => {
 
             mockAuthService.register.mockReturnValue(findUser);
 
-            await authController.register(mockRequest, mockResponse, mockNext);
+            await authController.register(mockRequest, mockResponse);
 
             expect(mockAuthService.register).toHaveBeenCalledTimes(1);
             expect(mockAuthService.register).toHaveBeenCalledWith(
@@ -71,7 +68,7 @@ describe('AuthController Test', () => {
 
             mockAuthService.register.mockRejectedValue(new Error(errorMessage));
 
-            await authController.register(mockRequest, mockResponse, mockNext);
+            await authController.register(mockRequest, mockResponse);
 
             expect(mockAuthService.register).toHaveBeenCalledTimes(1);
             expect(mockResponse.status).toHaveBeenCalledTimes(1);
@@ -93,7 +90,7 @@ describe('AuthController Test', () => {
                 refreshToken
             };
 
-            const Done = "로그인 완료."
+            const Done = "로그인 완료.";
 
             const result = { message : Done, token };
 
@@ -101,7 +98,7 @@ describe('AuthController Test', () => {
 
             mockAuthService.login.mockReturnValue(token);
 
-            await authController.login(mockRequest, mockResponse, mockNext);
+            await authController.login(mockRequest, mockResponse);
 
             expect(mockAuthService.login).toHaveBeenCalledTimes(1);
             expect(mockAuthService.login).toHaveBeenCalledWith(
@@ -119,7 +116,7 @@ describe('AuthController Test', () => {
             
             mockAuthService.login.mockRejectedValue(new Error(errorMessage));
 
-            await authController.login(mockRequest, mockResponse, mockNext);
+            await authController.login(mockRequest, mockResponse);
 
             expect(mockAuthService.login).toHaveBeenCalledTimes(1);
             expect(mockResponse.status).toHaveBeenCalledTimes(1);

@@ -20,7 +20,7 @@ export class UsersRepository {
         });
 
         return AllUser;
-    }
+    };
 
     // 유저 상세 조회
     findUserOne = async (paramId) => {
@@ -36,7 +36,7 @@ export class UsersRepository {
         });
 
         return userOne;
-    }
+    };
 
     // 권한 확인
     perMisson = async (userId) => {
@@ -45,5 +45,5 @@ export class UsersRepository {
         });
 
         return permisson;
-    }
+    };
 }

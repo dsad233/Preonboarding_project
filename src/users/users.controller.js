@@ -102,7 +102,7 @@ export class UsersController {
             console.log(error.message);
             return res.status(500).json({ message: "서버 에러가 발생했습니다." });
         }
-    }
+    };
 
     /**
    * @swagger
@@ -199,5 +199,5 @@ export class UsersController {
             console.log(error.message);
             return res.status(500).json({ message: "서버 에러가 발생했습니다." });
         }
-    }
+    };
 }

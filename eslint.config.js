@@ -1,6 +1,5 @@
 import globals from 'globals';
 import js from '@eslint/js';
-import react from 'eslint-plugin-react';
 
 export default [
   {
@@ -15,7 +14,6 @@ export default [
     },
     plugins: {
       js,
-      react,
     },
     rules: {
       'constructor-super': 'error',
@@ -25,20 +23,8 @@ export default [
       'no-unreachable': 'error',
       'no-unused-vars': 'warn',
       'no-use-before-define': 'error',
-      'semi': [2, 'always'],
+      'semi': ['error', 'always'],
+      'no-unused-vars': 'warn'
     },
-    settings: {
-      react: {
-        version: 'detect',
-      },
-    },
-  },
-  {
-    files: ['**/*.jsx'],
-    extends: ['plugin:react/recommended'],
-  },
-  {
-    files: ['**/*.js'],
-    extends: ['standard', 'prettier'],
   },
 ];

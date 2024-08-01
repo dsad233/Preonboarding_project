@@ -70,7 +70,7 @@ export class AuthController {
      */
 
     // 회원가입 로직
-    register = async (req, res, next) => {
+    register = async (req, res) => {
         try {
             const { username, password, nickname, passwordConfirm } = req.body;
 
@@ -97,7 +97,7 @@ export class AuthController {
             console.log(error.message);
             return res.status(500).json({ message: "서버 에러가 발생했습니다." });
         } 
-    }
+    };
 
     /**
      * @swagger
@@ -155,7 +155,7 @@ export class AuthController {
      */
 
     // 로그인 로직
-    login = async (req, res, next) => {
+    login = async (req, res) => {
         try {
             const { username, password } = req.body;
 
@@ -177,5 +177,5 @@ export class AuthController {
             console.log(error.message);
             return res.status(500).json({ message: "서버 에러가 발생했습니다." });
         }
-    }
+    };
 }

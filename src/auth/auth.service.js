@@ -14,7 +14,7 @@ export class AuthService {
         const hashpassword = await bcrypt.hash(password , salt);
 
         return hashpassword;
-    }
+    };
 
     // 회원가입 서비스 로직
     register = async (username, password, nickname) => {
@@ -33,7 +33,7 @@ export class AuthService {
         const userCreate = await this.authRepository.register(username, hashpassword, nickname);
 
         return userCreate;
-    }
+    };
 
 
     // 회원가입 서비스 로직
@@ -52,5 +52,5 @@ export class AuthService {
         const refreshToken = jwt.sign({ userId : findUsername.userId }, process.env.JWT_SECRET_REFRESH, { expiresIn : '5d' });
 
         return { userJwt, refreshToken };
-    }
+    };
 }

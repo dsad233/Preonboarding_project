@@ -29,19 +29,19 @@ export class AuthRepository{
         });
 
         return { userCreate, authoritiesCreate };
-    }
+    };
 
     // 일치하는 유저이름 확인 로직
     findUsername = async (username) => {
         const findUsername = await this.prisma.users.findFirst({ where : { username } });
 
         return findUsername;
-    }
+    };
 
     // 일치하는 닉네임 확인 로직
     findNickname = async (nickname) => {
         const findNickname = await this.prisma.users.findUnique({ where : { nickname } });
         
         return findNickname;
-    }
+    };
 }
