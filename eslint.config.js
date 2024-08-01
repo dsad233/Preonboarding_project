@@ -3,9 +3,6 @@ import js from '@eslint/js';
 
 export default [
   {
-    "env": {
-    "node": true
-  },
     files: ['**/*.js', '**/*.jsx'],
     languageOptions: {
       globals: {
