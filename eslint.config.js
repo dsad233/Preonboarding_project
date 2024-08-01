@@ -1,5 +1,6 @@
-import globals, { es2015, es2021 } from 'globals';
+import globals from "globals";
 import js from '@eslint/js';
+
 
 export default [
   {
@@ -8,15 +9,10 @@ export default [
       globals: {
         ...globals.node,
         ...globals.es2021,
-        ...globals.jest,
+        ...globals.jest
       },
       ecmaVersion: 'latest',
       sourceType: 'module',
-    },
-    env : {
-      node: true,
-      es2021 : true,
-      jest: true,
     },
     plugins: {
       js,
