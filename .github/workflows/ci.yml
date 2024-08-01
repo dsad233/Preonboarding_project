@@ -49,6 +49,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
         with:
@@ -68,9 +69,9 @@ jobs:
             echo "HASH_ROUND=${{ secrets.HASH_ROUND }}" >> .env
             echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
             echo "JWT_SECRET_REFRESH=${{ secrets.JWT_SECRET_REFRESH }}" >> .env
-	  				# node 관련 환경 설정 가져오기 위해 실행
+
+            # Node.js 관련 환경 설정 가져오기 위해 실행
             source /home/ubuntu/.nvm/nvm.sh
+
             # 서버 실행 시크립트 가동!
             source ./run.sh
-
-
