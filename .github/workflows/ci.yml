@@ -62,6 +62,7 @@ jobs:
             cd /home/ubuntu/Preonboarding_project
 
             # GitHub에서 최신 코드를 가져옴
+            git config --global --add safe.directory /home/ubuntu/Preonboarding_project
             git pull
 
             # .env 파일 생성
