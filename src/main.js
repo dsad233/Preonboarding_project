@@ -21,6 +21,6 @@ app.use('/api-docs', swagger.swaggerUi.serve, swagger.swaggerUi.setup(swagger.sp
 app.listen(port, () => {
     console.log(port ,"포트로 서버가 열렸습니다.");
     console.log("Local Swagger 주소 : ", "http://localhost:3000/api-docs/");
-    console.log("AWS EC2 주소 : ", "http://3.34.127.14:3000");
+    console.log("AWS EC2 주소 : ", "http://43.203.236.50:3000");
 });
 

@@ -1,4 +1,4 @@
-import globals, { es2015 } from 'globals';
+import globals from "globals";
 import js from '@eslint/js';
 
 export default [
@@ -6,17 +6,12 @@ export default [
     files: ['**/*.js', '**/*.jsx'],
     languageOptions: {
       globals: {
+        ...globals.browser,
         ...globals.node,
-        ...globals.es2015,
-        ...globals.jest,
+        ...globals.jest
       },
       ecmaVersion: 'latest',
       sourceType: 'module',
-    },
-    env : {
-      node: true,
-      es2015 : true,
-      jest: true,
     },
     plugins: {
       js,
